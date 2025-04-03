@@ -45,10 +45,15 @@ class Chatbot {
     }
 
     private function formatPrompt($message) {
-        $prompt = "Context: Previous messages - " . implode(", ", $this->context) . "\n";
-        $prompt .= "Current message: " . $message . "\n";
-        $prompt .= "Please provide a helpful response.";
-        return $prompt;
+        return [
+            'inputs' => "Answer as a helpful assistant. Question: $message",
+            'parameters' => [
+                'max_length' => 100,
+                'temperature' => 0.5,
+                'top_p' => 0.8,
+                'do_sample' => true
+            ]
+        ];
     }
 
     private function makeApiRequest($data) {
@@ -79,10 +84,10 @@ class Chatbot {
             $text = $response[0]['generated_text'];
 
             $text = ucfirst(trim($text));
-            $text = $this->improveResponse($text);
+            // $text = $this->improveResponse($text);
 
             return [
-                'status' => 'OK',
+                'status' => 'success',
                 'message' => $text,
                 'confidence' => $response[0]['score'] ?? null
             ];
@@ -91,27 +96,27 @@ class Chatbot {
         return [
             'status' => 'ERROR',
             'message' => 'No response generated.',
-            'confidence' => null
         ];
     }
 
-private function improveResponse($text) {
-    if (!preg_match('/[.!?]$/', $text)) {
-        $text .= '.';
-    }
-
-    $genericResponses = [
-        "I don't know" => "I'm not sure about that, but I can help you find the information.",
-        "I can't help" => "While this might be beyond my current capabilities, I can suggest alternatives."
-    ];
-
-    foreach ($genericResponses as $generic => $better) {
-        if (stripos($text, $generic) !== false) {
-            $text = $better;
+    private function improveResponse($text) {
+        if (!preg_match('/[.!?]$/', $text)) {
+            $text .= '.';
         }
-    }
 
-    return $text;
+        $genericResponses = [
+            "I don't know" => "I'm not sure about that, but I can help you find the information.",
+            "I can't help" => "While this might be beyond my current capabilities, I can suggest alternatives."
+        ];
+
+        foreach ($genericResponses as $generic => $better) {
+            if (stripos($text, $generic) !== false) {
+                $text = $better;
+            }
+        }
+
+        return $text;
+    }
 }
-}
-?>
+
+require_once 'chatbot.php'; // Este archivo contiene la clase Chatbot
