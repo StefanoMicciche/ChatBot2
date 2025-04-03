@@ -79,19 +79,17 @@ class Chatbot {
             $text = $response[0]['generated_text'];
 
             $text = ucfirst(trim($text));
-            $text = $this->improveResponse($text);
+            #$text = $this->improveResponse($text);
 
             return [
-                'status' => 'OK',
+                'status' => 'success',
                 'message' => $text,
                 'confidence' => $response[0]['score'] ?? null
             ];
         }
-
         return [
-            'status' => 'ERROR',
-            'message' => 'No response generated.',
-            'confidence' => null
+            'status' => 'error',
+            'message' => 'No pude generar una respuesta.'
         ];
     }
 
@@ -113,5 +111,29 @@ private function improveResponse($text) {
 
     return $text;
 }
+}
+
+try {
+    $bot = new Chatbot();
+    
+    // Configuración personalizada
+    $options = [
+        'temperature' => 0.7,
+        'max_length' => 200
+    ];
+
+    $response = $bot->getResponse("What day is it?", $options);
+
+    if ($response['status'] === 'success') {
+        echo "Bot: " . $response['message'] . "\n";
+        if (isset($response['confidence'])) {
+            echo "Confidence: " . $response['confidence'] . "\n";
+        }
+    } else {
+        echo "Error: " . $response['message'] . "\n";
+    }
+
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "\n";
 }
 ?>

@@ -18,8 +18,6 @@
             <input type="text" id="user-input" placeholder="Escribe un mensaje...">
             <button onclick="sendMessage()">Enviar</button>
         </div>
-        <?php
-require_once 'chatbotConfig.php';
-?>
+     
 </body>
 </html>
