@@ -1,23 +1,48 @@
 <?php
 header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once 'chatbotConfig.php';
+require_once 'responseinjector.php';
 
 try {
-    $input = json_decode(file_get_contents('php://input'), true);
-    $message = $input['message'] ?? '';
+    // Log incoming request
+    error_log("Received request: " . file_get_contents('php://input'));
 
+    // Parse input
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception('Invalid JSON: ' . json_last_error_msg());
+    }
+
+    // Validate message
+    $message = $input['message'] ?? '';
     if (empty($message)) {
         throw new Exception('No message provided');
     }
 
+    // Initialize chatbot and get response
     $chatbot = new Chatbot();
     $response = $chatbot->getResponse($message);
 
+    // Validate response
+    if (!is_array($response) || !isset($response['status'])) {
+        throw new Exception('Invalid response format from chatbot');
+    }
+
+    // Log response
+    error_log("Sending response: " . json_encode($response));
+
+    // Send response
     echo json_encode($response);
+
 } catch (Exception $e) {
+    error_log("Error in chatbot: " . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'status' => 'error',
-        'message' => $e->getMessage()
+        'message' => $e->getMessage(),
+        'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
     ]);
 }
 ?>

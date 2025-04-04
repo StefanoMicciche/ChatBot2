@@ -21,30 +21,34 @@ const sendMessage = async () => {
 
   if (!message) return;
 
-  addMessage("user", message);
-  input.value = "";
-
   try {
-    const response = await fetch("handlechatbot.php", {
-      method: "POST",
+    addMessage("user", message);
+    input.value = "";
+
+    const response = await fetch('chatbotprocess_message.php', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message })
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
     const data = await response.json();
 
     if (data.status === "success") {
       addMessage("bot", data.message);
     } else {
-      addMessage("error", "Error: " + data.message);
+      addMessage("error", data.message || 'An error occurred');
     }
   } catch (error) {
-    addMessage("error", "An error occurred while sending the message.");
+    console.error("Error:", error);
+    addMessage('error', 'Failed to send message');
   }
 };
-
 /**
  * Initialize event listeners when DOM is loaded
  */
@@ -64,3 +68,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
