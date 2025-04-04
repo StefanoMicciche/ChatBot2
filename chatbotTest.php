@@ -1,5 +1,6 @@
 <?php
 require_once 'chatbotConfig.php';
+require_once 'chatbotLearning.php';
 
 try {
     // 1. Crear instancia del bot
@@ -81,4 +82,5 @@ foreach ($testMessages as $message) {
 echo "General error: " . $e->getMessage() . "\n";
     
 }
-?>
+
+
