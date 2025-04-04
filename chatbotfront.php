@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="chatbot.css?v=<?php echo time(); ?>">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script defer src="chatbotFunction.js"></script>
 </head>
 <body>
@@ -20,7 +21,13 @@
             <button onclick="sendMessage()">Submit</button>
         </div>
         <?php
-require_once 'chatbotConfig.php';
-?>
+        require_once 'chatbotConfig.php';
+        require_once 'chatbotLearning.php';
+        require_once 'responseinjector.php';
+
+        $chatbot = new Chatbot();
+        ?>
+    </body>
+    </html>
 </body>
 </html>
