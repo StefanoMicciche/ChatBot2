@@ -1,0 +1,11 @@
+{
+    "saludos": {
+        "hola": "¡Hola! ¿En qué puedo ayudarte?",
+        "buenos días": "¡Buenos días! ¿En qué puedo ayudarte hoy?",
+        "buenas tardes": "¡Buenas tardes! ¿Cómo puedo ayudarte?"
+    },
+    "preguntas_frecuentes": {
+        "¿qué puedes hacer?": "Puedo ayudarte con varias tareas...",
+        "¿quién eres?": "Soy Ada, un asistente virtual..."
+    }
+}
