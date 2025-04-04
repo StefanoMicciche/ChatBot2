@@ -10,13 +10,13 @@
 <body>
 <div class="chat-container">
         <div class="chat-header">
-            <h2>Talk with Ada</h2>
+            <h2>Ada</h2>
             <small>Powered by Hugging Face</small>
         </div>
         <div class="chat-messages" id="chat-messages">
         </div>
         <div class="chat-input">
-            <input type="text" id="user-input" placeholder="Escribe un mensaje...">
+            <input type="text" id="user-input" placeholder="Write a message...">
             <button onclick="sendMessage()">Submit</button>
         </div>
         <?php

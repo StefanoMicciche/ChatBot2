@@ -1,6 +1,13 @@
+
 <?php
+
+error_log("Request recibido");
+error_log("Datos: " . file_get_contents('php://input'));
+
+
 header('Content-Type: application/json');
 require_once 'chatbotConfig.php';
+require_once 'chatbot.php';
 
 try{
     $data = json_decode(file_get_contents('php://input'), true);

@@ -1,4 +1,8 @@
-// Función para añadir mensajes al chat
+/**
+ * Adds a message to the chat display
+ * @param {string} type - The type of message ('user', 'bot', or 'error')
+ * @param {string} message - The message content to display
+ */
 function addMessage(type, message) {
   const messagesDiv = document.getElementById("chat-messages");
   const messageDiv = document.createElement("div");
@@ -8,45 +12,50 @@ function addMessage(type, message) {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
+/**
+ * Handles sending messages and receiving responses
+ */
 const sendMessage = async () => {
-  const input = document.querySelector("#user-input"); // Añadir #
+  const input = document.querySelector("#user-input");
   const message = input.value.trim();
 
-  if (message) {
-    addMessage("user", message);
-    input.value = "";
+  if (!message) return;
 
-    try {
-      const response = await fetch("handle_chatbot.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
-      });
-      const data = await response.json();
+  addMessage("user", message);
+  input.value = "";
 
-      if (data.status === "success") {
-        addMessage("bot", data.message);
-      } else {
-        addMessage("error", "Error: " + data.message);
-      }
-    } catch (error) {
-      addMessage("error", "An error occurred while sending the message.");
+  try {
+    const response = await fetch("handlechatbot.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      addMessage("bot", data.message);
+    } else {
+      addMessage("error", "Error: " + data.message);
     }
+  } catch (error) {
+    addMessage("error", "An error occurred while sending the message.");
   }
 };
 
-// 2. Añadir eventos
+/**
+ * Initialize event listeners when DOM is loaded
+ */
 document.addEventListener("DOMContentLoaded", () => {
-  // Para el botón
   const submitButton = document.querySelector("#submit-button");
+  const input = document.querySelector("#user-input");
+
   if (submitButton) {
     submitButton.addEventListener("click", sendMessage);
   }
 
-  // Para el Enter
-  const input = document.querySelector("#user-input");
   if (input) {
     input.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {

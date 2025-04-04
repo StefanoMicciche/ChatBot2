@@ -1,6 +1,6 @@
 <?php
 require_once 'chatbot.php';
-
+require_once 'chatbotLearning.php';
 class Chatbot {
     private $token;
     private $url;
@@ -17,7 +17,7 @@ class Chatbot {
 
         $parameters = [
             'max_length' => $options['max_length'] ?? 200,
-            'temperature' => $options['temperature'] ?? 1.0,
+            'temperature' => $options['temperature'] ?? 0.3,
             'top_p' => $options['top_p'] ?? 0.9,
             'do_sample' => true,
         ];
@@ -49,7 +49,7 @@ class Chatbot {
             'inputs' => "Answer as a helpful assistant. Question: $message",
             'parameters' => [
                 'max_length' => 100,
-                'temperature' => 0.5,
+                'temperature' => 0.3,
                 'top_p' => 0.8,
                 'do_sample' => true
             ]
@@ -118,5 +118,6 @@ class Chatbot {
         return $text;
     }
 }
+
 
 require_once 'chatbot.php'; // Este archivo contiene la clase Chatbot
