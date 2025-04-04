@@ -1,6 +1,6 @@
 <?php
 require_once 'chatbot.php';
-
+require_once 'chatbotLearning.php';
 class Chatbot {
     private $token;
     private $url;
@@ -17,7 +17,7 @@ class Chatbot {
 
         $parameters = [
             'max_length' => $options['max_length'] ?? 200,
-            'temperature' => $options['temperature'] ?? 1.0,
+            'temperature' => $options['temperature'] ?? 0.3,
             'top_p' => $options['top_p'] ?? 0.9,
             'do_sample' => true,
         ];
@@ -45,10 +45,15 @@ class Chatbot {
     }
 
     private function formatPrompt($message) {
-        $prompt = "Context: Previous messages - " . implode(", ", $this->context) . "\n";
-        $prompt .= "Current message: " . $message . "\n";
-        $prompt .= "Please provide a helpful response.";
-        return $prompt;
+        return [
+            'inputs' => "Answer as a helpful assistant. Question: $message",
+            'parameters' => [
+                'max_length' => 100,
+                'temperature' => 0.3,
+                'top_p' => 0.8,
+                'do_sample' => true
+            ]
+        ];
     }
 
     private function makeApiRequest($data) {
@@ -79,7 +84,11 @@ class Chatbot {
             $text = $response[0]['generated_text'];
 
             $text = ucfirst(trim($text));
+<<<<<<< HEAD
             #$text = $this->improveResponse($text);
+=======
+            // $text = $this->improveResponse($text);
+>>>>>>> 93812c32e770108435815c78f9982c0bd39d96c8
 
             return [
                 'status' => 'success',
@@ -88,29 +97,36 @@ class Chatbot {
             ];
         }
         return [
+<<<<<<< HEAD
             'status' => 'error',
             'message' => 'No pude generar una respuesta.'
+=======
+            'status' => 'ERROR',
+            'message' => 'No response generated.',
+>>>>>>> 93812c32e770108435815c78f9982c0bd39d96c8
         ];
     }
 
-private function improveResponse($text) {
-    if (!preg_match('/[.!?]$/', $text)) {
-        $text .= '.';
-    }
-
-    $genericResponses = [
-        "I don't know" => "I'm not sure about that, but I can help you find the information.",
-        "I can't help" => "While this might be beyond my current capabilities, I can suggest alternatives."
-    ];
-
-    foreach ($genericResponses as $generic => $better) {
-        if (stripos($text, $generic) !== false) {
-            $text = $better;
+    private function improveResponse($text) {
+        if (!preg_match('/[.!?]$/', $text)) {
+            $text .= '.';
         }
-    }
 
-    return $text;
+        $genericResponses = [
+            "I don't know" => "I'm not sure about that, but I can help you find the information.",
+            "I can't help" => "While this might be beyond my current capabilities, I can suggest alternatives."
+        ];
+
+        foreach ($genericResponses as $generic => $better) {
+            if (stripos($text, $generic) !== false) {
+                $text = $better;
+            }
+        }
+
+        return $text;
+    }
 }
+<<<<<<< HEAD
 }
 
 try {
@@ -137,3 +153,8 @@ try {
     echo "Error: " . $e->getMessage() . "\n";
 }
 ?>
+=======
+
+
+require_once 'chatbot.php'; // Este archivo contiene la clase Chatbot
+>>>>>>> 93812c32e770108435815c78f9982c0bd39d96c8
