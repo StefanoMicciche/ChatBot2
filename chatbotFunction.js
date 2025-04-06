@@ -48,8 +48,8 @@ const sendMessage = async () => {
     if (botResponseText && botResponseText.trim()) {
       try {
         const responseData = JSON.parse(botResponseText);
-        if (responseData && responseData.messages) {
-          addMessage("bot", responseData.messages);
+        if (responseData && responseData.message) {
+          addMessage("bot", responseData.message);
         } else {
           addMessage("bot", botResponseText);
         }

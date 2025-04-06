@@ -60,7 +60,8 @@ public function injectResponse() {
             "What is the capital of France?" => "The capital of France is Paris.",
             "What is the capital of Germany?" => "The capital of Germany is Berlin.",
             "What is the capital of Italy?" => "The capital of Italy is Rome.",
-            "What is the capital of Spain?" => "The capital of Spain is Madrid."
+            "What is the capital of Spain?" => "The capital of Spain is Madrid.",
+            "Who was Ada Lovelace?" => "Ada Lovelace was a mathematician and writer, known for her work on Charles Babbage's early mechanical general-purpose computer, the Analytical Engine.",
         ]
     ];
     
