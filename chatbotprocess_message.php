@@ -1,4 +1,7 @@
 <?php
+// Inicia el buffer de salida
+ob_start();
+
 header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -30,19 +33,33 @@ try {
         throw new Exception('Invalid response format from chatbot');
     }
 
+    // Verificar si hay algún contenido en el buffer
+    $output_buffer = ob_get_contents();
+    if (!empty($output_buffer)) {
+        error_log("Unwanted output detected: " . $output_buffer);
+    }
+    
+    // Limpia el buffer
+    ob_clean();
+    
     // Log response
     error_log("Sending response: " . json_encode($response));
-
-    // Send response
+    
+    // Envía la respuesta JSON
     echo json_encode($response);
 
 } catch (Exception $e) {
+    // Limpiar el buffer
+    ob_clean();
+    
     error_log("Error in chatbot: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'status' => 'error',
-        'message' => $e->getMessage(),
-        'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
+        'message' => $e->getMessage()
     ]);
 }
+
+// Finaliza y envía el buffer
+ob_end_flush();
 ?>

@@ -46,7 +46,16 @@ const sendMessage = async () => {
 
     const botResponseText = await response.text();
     if (botResponseText && botResponseText.trim()) {
-      addMessage("bot", botResponseText);
+      try {
+        const responseData = JSON.parse(botResponseText);
+        if (responseData && responseData.messages) {
+          addMessage("bot", responseData.messages);
+        } else {
+          addMessage("bot", botResponseText);
+        }
+      } catch (e) {
+        addMessage("bot", botResponseText);
+      }
     } else {
       throw new Error("Empty response from server");
     }
