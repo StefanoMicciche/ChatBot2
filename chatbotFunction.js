@@ -17,36 +17,47 @@ function addMessage(type, message) {
  */
 const sendMessage = async () => {
   const input = document.querySelector("#user-input");
-  const message = input.value.trim();
+  if (!input) {
+    console.error("Input element not found");
+    return;
+  }
 
+  const message = input.value.trim();
   if (!message) return;
 
   try {
     addMessage("user", message);
     input.value = "";
+    input.disabled = true;
 
-    const response = await fetch('chatbotprocess_message.php', {
-      method: 'POST',
+    const response = await fetch("chatbotprocess_message.php", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ message }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `Server error: ${response.status} ${response.statusText}`
+      );
     }
 
-    const data = await response.json();
-
-    if (data.status === "success") {
-      addMessage("bot", data.message);
+    const botResponseText = await response.text();
+    if (botResponseText && botResponseText.trim()) {
+      addMessage("bot", botResponseText);
     } else {
-      addMessage("error", data.message || 'An error occurred');
+      throw new Error("Empty response from server");
     }
   } catch (error) {
-    console.error("Error:", error);
-    addMessage('error', 'Failed to send message');
+    console.error("Chat error:", error);
+    addMessage("error", `Error: ${error.message}`);
+  } finally {
+    if (input) {
+      input.disabled = false;
+      input.focus();
+    }
   }
 };
 /**
@@ -68,4 +79,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
